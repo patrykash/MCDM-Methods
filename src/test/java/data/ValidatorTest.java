@@ -60,4 +60,44 @@ class ValidatorTest {
         assertThat(messages).isEmpty();
     }
 
+    @ParameterizedTest
+    @MethodSource
+    void shouldNotAcceptIncorrectDecisionMatrix(double[][] incorrectDecisionMatrix, String expectedMessage) {
+        boolean isCorrect = validator.isDecisionMatrixCorrect(incorrectDecisionMatrix);
+        List<String> messages = validator.getErrorMessages();
+
+        assertThat(isCorrect)
+                .as("is decision matrix correct")
+                .isFalse();
+        assertThat(messages).containsOnlyOnce(expectedMessage);
+    }
+
+    static Stream<Arguments> shouldNotAcceptIncorrectDecisionMatrix() {
+        double[][] decisionMatrixWithNull = {{1.52, 1.0,},null};
+        double[][] decisionMatrixWithEmptyValue = {{1.52, 1.0,},{}};
+
+        return Stream.of(
+                Arguments.of(null, "Decision matrix can't be null"),
+                Arguments.of(new double[][]{},"Decision matrix can't be empty"),
+                Arguments.of(decisionMatrixWithNull, "Decision matrix can't have null"),
+                Arguments.of(decisionMatrixWithEmptyValue, "Decision matrix can't have empty value")
+        );
+    }
+
+
+    @Test
+    void shouldAcceptCorrectDecisionMatrix(){
+        double[][] correctDecisionMatrix = {{1.2, 3.2, 43.0}, {3.2, 2.2, 30.1}};
+
+        boolean isCorrect = validator.isDecisionMatrixCorrect(correctDecisionMatrix);
+        List<String> messages = validator.getErrorMessages();
+
+        assertThat(isCorrect)
+                .as("is decision matrix correct")
+                .isTrue();
+        assertThat(messages).isEmpty();
+    }
+
+    
+
 }
