@@ -1,6 +1,5 @@
 package data;
 
-import org.assertj.core.internal.bytebuddy.implementation.bind.annotation.Argument;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -98,6 +97,45 @@ class ValidatorTest {
         assertThat(messages).isEmpty();
     }
 
-    
+    @ParameterizedTest
+    @MethodSource
+    void shouldAcceptCorrectWeightVector(double[] correctWeightsVector) {
+
+        boolean isCorrect = validator.isWeightsVectorCorrect(correctWeightsVector);
+
+        assertThat(isCorrect)
+                .as("is weight vector correct")
+                .isTrue();
+    }
+
+    static Stream<double[]> shouldAcceptCorrectWeightVector() {
+        return Stream.of(
+                new double[]{0.1, 0.3, 0.6},
+                new double[]{0.2, 0.3, 0.1, 0.05, 0.05, 0.3}
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void shouldNotAcceptIncorrectWeightVector(double[] incorrectWeightsVector, String expectedMessage) {
+        boolean isCorrect = validator.isWeightsVectorCorrect(incorrectWeightsVector);
+        List<String> message = validator.getErrorMessages();
+
+        assertThat(isCorrect)
+                .as("is weights vector correct")
+                .isFalse();
+        assertThat(message).containsOnlyOnce(expectedMessage);
+    }
+
+    static Stream<Arguments> shouldNotAcceptIncorrectWeightVector() {
+        return Stream.of(
+                Arguments.of(null, "Weights vector can't be null"),
+                Arguments.of(new double[]{}, "Weights vector can't be empty" ),
+                Arguments.of(new double[]{0.3,0.2,0.1}, "Weights vector sum isn't equals 1"),
+                Arguments.of(new double[]{0.2,0.2,0.1,0.05}, "Weights vector sum isn't equals 1")
+        );
+    }
+
+
 
 }

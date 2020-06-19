@@ -20,7 +20,7 @@ public class Validator {
         if (isNull(variants) || (isEmpty(variants))){
             return false;
         } else
-        if (isThereNull(variants) || isThereEmpty(variants)) {
+        if (isThereNull(variants) || isThereEmptyValue(variants)) {
             return false;
         }
         return true;
@@ -55,7 +55,7 @@ public class Validator {
         return false;
     }
 
-    private boolean isThereEmpty(String[] variants) {
+    private boolean isThereEmptyValue(String[] variants) {
         for (String variant : variants) {
             if (variant.length() < 1){
                 logger.error("Variant is empty");
@@ -70,7 +70,7 @@ public class Validator {
         if (isNull(decisionMatrix) || isEmpty(decisionMatrix)) {
             return false;
         }
-        if (isThereNull(decisionMatrix) || isThereEmpty(decisionMatrix)){
+        if (isThereNull(decisionMatrix) || isThereEmptyValue(decisionMatrix)){
             return false;
         }
         return true;
@@ -105,7 +105,7 @@ public class Validator {
         return false;
     }
 
-    private boolean isThereEmpty(double[][] decisionMatrix) {
+    private boolean isThereEmptyValue(double[][] decisionMatrix) {
         for (double[] matrix : decisionMatrix) {
             if (matrix.length == 0) {
                 logger.error("Decision matrix have empty value");
@@ -116,6 +116,42 @@ public class Validator {
         return false;
     }
 
+    boolean isWeightsVectorCorrect(double[] weightVector) {
+        if (isNull(weightVector) || isEmpty(weightVector)) {
+            return false;
+        }
+        return isSumEqualsOne(weightVector);
+    }
 
+    private boolean isNull(double[] weightVector) {
+        if (weightVector == null) {
+            logger.error("Weights vector is null");
+            errorMessages.add("Weights vector can't be null");
+            return true;
+        }
+        return false;
+    }
 
+    private boolean isEmpty(double[] weightVector) {
+        if (weightVector.length < 1) {
+            logger.error("Weights vector is empty");
+            errorMessages.add("Weights vector can't be empty");
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isSumEqualsOne(double[] weightsVector) {
+        double weightsVectorSum = 0;
+        for (double v : weightsVector) {
+            weightsVectorSum += v;
+        }
+        if (weightsVectorSum == 1) {
+           return true;
+        } else {
+            logger.error( "Weights vector sum isn't equals 1");
+            errorMessages.add("Weights vector sum isn't equals 1");
+            return false;
+        }
+    }
 }

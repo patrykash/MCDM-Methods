@@ -4,13 +4,13 @@ package model;
 public class DecisionProblem {
 
     private CriterionType[] criteriaTypes;
-    private double [] weightVector;
+    private double [] weightsVector;
     private String[] variants;
     private double[][] decisionMatrix;
 
-    public DecisionProblem(CriterionType[] criteriaTypes, double[] weightVector, String[] variants, double[][] decisionMatrix) {
+    public DecisionProblem(CriterionType[] criteriaTypes, double[] weightsVector, String[] variants, double[][] decisionMatrix) {
         this.criteriaTypes = criteriaTypes;
-        this.weightVector = weightVector;
+        this.weightsVector = weightsVector;
         this.variants = variants;
         this.decisionMatrix = decisionMatrix;
     }
@@ -19,8 +19,8 @@ public class DecisionProblem {
         return criteriaTypes;
     }
 
-    public double[] getWeightVector() {
-        return weightVector;
+    public double[] getWeightsVector() {
+        return weightsVector;
     }
 
     public String[] getVariants() {
