@@ -1,5 +1,6 @@
 package data;
 
+import model.CriterionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -154,4 +155,46 @@ public class Validator {
             return false;
         }
     }
+
+     boolean isCriteriaTypesCorrect(List<CriterionType> criteriaTypes) {
+         if (isNull(criteriaTypes) || isEmpty(criteriaTypes)) {
+             return false;
+         }
+         if (isThereNull(criteriaTypes)){
+             return false;
+         }
+        return true;
+    }
+
+    private boolean isNull(List<CriterionType> criteriaTypes) {
+        if (criteriaTypes == null) {
+            logger.error("Criteria types are null");
+            errorMessages.add("Criteria types can't be null");
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isEmpty(List<CriterionType> criteriaTypes) {
+        if (criteriaTypes.size() < 1) {
+            logger.error("Criteria types are empty");
+            errorMessages.add("Criteria types can't be empty");
+            return true;
+        }
+        return false;
+
+    }
+
+    private boolean isThereNull(List<CriterionType> criteriaTypes) {
+        for (CriterionType criteriaType : criteriaTypes) {
+            if (criteriaType == null) {
+                logger.error("Criterion type is null");
+                errorMessages.add("Criterion type can't be null");
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 }

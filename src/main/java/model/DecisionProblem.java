@@ -1,21 +1,23 @@
 package model;
 
 
+import java.util.List;
+
 public class DecisionProblem {
 
-    private CriterionType[] criteriaTypes;
+    private List<CriterionType> criteriaTypes;
     private double [] weightsVector;
     private String[] variants;
     private double[][] decisionMatrix;
 
-    public DecisionProblem(CriterionType[] criteriaTypes, double[] weightsVector, String[] variants, double[][] decisionMatrix) {
+    public DecisionProblem(List<CriterionType> criteriaTypes, double[] weightsVector, String[] variants, double[][] decisionMatrix) {
         this.criteriaTypes = criteriaTypes;
         this.weightsVector = weightsVector;
         this.variants = variants;
         this.decisionMatrix = decisionMatrix;
     }
 
-    public CriterionType[] getCriteriaTypes() {
+    public List<CriterionType> getCriteriaTypes() {
         return criteriaTypes;
     }
 
