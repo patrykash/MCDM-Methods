@@ -1,6 +1,6 @@
 package data;
 
-import model.CriterionType;
+import methods.CriterionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

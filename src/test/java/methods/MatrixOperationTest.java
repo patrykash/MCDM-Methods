@@ -12,7 +12,6 @@ class MatrixOperationTest {
         MatrixOperation matrixOperation = new MatrixOperation();
         double[][] matrix = new double[][]{{0.129, 0, 0.666}, {1, 5, 10}, {1, 0.25, 1}};
         double[] vector = new double[]{0.6, 0.1, 0.3};
-
         double[] expectedResult = {0.2772, 4.1, 0.925};
 
         double[] result = matrixOperation.multiplyMatrixByVector(matrix, vector);

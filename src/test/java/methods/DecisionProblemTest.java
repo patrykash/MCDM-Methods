@@ -47,6 +47,7 @@ class DecisionProblemTest {
         DecisionProblem decisionProblem = DecisionProblem.Builder.builder()
                 .withDecisionMatrix(new double[2][0])
                 .build();
+
         assertThatExceptionOfType(NoSuchElementException.class)
                 .isThrownBy(decisionProblem::findMaxValueForEachCriterion);
     }
