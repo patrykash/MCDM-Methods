@@ -1,4 +1,4 @@
-package model;
+package methods;
 
 public enum CriterionType {
     MAX,
