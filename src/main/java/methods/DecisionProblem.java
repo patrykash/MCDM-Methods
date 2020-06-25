@@ -42,7 +42,7 @@ public class DecisionProblem {
     }
 
      int getNumberOfVariants() {
-        return decisionMatrix[0].length;
+        return variants.length;
     }
 
      double[] findMaxValueForEachCriterion() {
