@@ -4,7 +4,7 @@ package methods;
 
 class MatrixOperation {
 
-    double[] multiplyMatrixByVector(double[][] matrix, double[] vector) {
+    static double[] multiplyMatrixByVector(double[][] matrix, double[] vector) {
         int vectorSize= vector.length;
         int matrixSize = matrix.length;
         double[] result = new double[vectorSize];
