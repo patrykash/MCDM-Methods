@@ -1,6 +1,8 @@
 package data;
 
 import methods.CriterionType;
+import methods.DecisionProblem;
+import methods.ValidationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -13,6 +15,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.mockito.Mockito.*;
 
 class ValidatorTest {
 
@@ -177,4 +181,191 @@ class ValidatorTest {
                 Arguments.of(Arrays.asList(null, CriterionType.MIN, CriterionType.MIN), "Criterion type can't be null")
         );
     }
+
+    @ParameterizedTest
+    @MethodSource
+    void shouldThrowValidationExceptionForInvalidCriteriaTypes(DecisionProblem decisionProblem) {
+        Validator spyValidator = spy(validator);
+
+        doReturn(false)
+                .when(spyValidator)
+                .isCriteriaTypesCorrect(decisionProblem.getCriteriaTypes());
+        doReturn(true).
+                when(spyValidator).
+                isEachVariantsCorrect(decisionProblem.getVariants());
+        doReturn(true)
+                .when(spyValidator)
+                .isDecisionMatrixCorrect(decisionProblem.getDecisionMatrix());
+        doReturn(true)
+                .when(spyValidator)
+                .isWeightsVectorCorrect(decisionProblem.getWeightsVector());
+
+
+        assertThatExceptionOfType(ValidationException.class)
+                .isThrownBy(() -> validator.validate(decisionProblem))
+                .withMessage("Validation error");
+
     }
+
+    static List<DecisionProblem> shouldThrowValidationExceptionForInvalidCriteriaTypes() {
+        return Arrays.asList(
+                createDecisionProblemWithInvalidCriteriaTypes(null),
+                createDecisionProblemWithInvalidCriteriaTypes(Collections.emptyList()),
+                createDecisionProblemWithInvalidCriteriaTypes(Arrays.asList(null, CriterionType.MIN, CriterionType.MIN))
+        );
+    }
+
+    private static DecisionProblem createDecisionProblemWithInvalidCriteriaTypes(List<CriterionType> invalidCriteriaTypes) {
+        double[][] correctDecisionMatrix = new double[][]{{1.2, 3.2, 43.0}, {3.2, 2.2, 30.1}};
+        double[] correctWeightsVector = new double[]{0.1, 0.3, 0.6};
+        String[] correctVariants = {"variant1", "variant2", "variant3"};
+        return DecisionProblem.Builder.builder()
+                .withVariants(correctVariants)
+                .withWeightsVector(correctWeightsVector)
+                .withDecisionMatrix(correctDecisionMatrix)
+                .withCriteriaTypes(invalidCriteriaTypes)
+                .build();
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void shouldThrowValidationExceptionForInvalidWeightsVector(DecisionProblem decisionProblem) {
+        Validator spyValidator = spy(validator);
+
+        doReturn(false)
+                .when(spyValidator)
+                .isWeightsVectorCorrect(decisionProblem.getWeightsVector());
+        doReturn(true)
+                .when(spyValidator)
+                .isCriteriaTypesCorrect(decisionProblem.getCriteriaTypes());
+        doReturn(true)
+                .when(spyValidator)
+                .isEachVariantsCorrect(decisionProblem.getVariants());
+        doReturn(true)
+                .when(spyValidator)
+                .isDecisionMatrixCorrect(decisionProblem.getDecisionMatrix());
+
+
+        assertThatExceptionOfType(ValidationException.class)
+                .isThrownBy(() -> validator.validate(decisionProblem))
+                .withMessage("Validation error");
+
+    }
+
+    static List<DecisionProblem> shouldThrowValidationExceptionForInvalidWeightsVector() {
+        return Arrays.asList(
+                createDecisionProblemWithInvalidWeightsVector(null),
+                createDecisionProblemWithInvalidWeightsVector(new double[]{}),
+                createDecisionProblemWithInvalidWeightsVector(new double[]{0.3, 0.2, 0.1}),
+                createDecisionProblemWithInvalidWeightsVector(new double[]{0.2, 0.2, 0.1, 0.05})
+        );
+    }
+
+    private static DecisionProblem createDecisionProblemWithInvalidWeightsVector(double[] invalidWeightsVector) {
+        double[][] correctDecisionMatrix = new double[][]{{1.2, 3.2, 43.0}, {3.2, 2.2, 30.1}};
+        List<CriterionType> correctCriteriaTypes = Arrays.asList(CriterionType.MAX, CriterionType.MIN, CriterionType.MAX);
+        String[] correctVariants = {"variant1", "variant2", "variant3"};
+        return DecisionProblem.Builder.builder()
+                .withVariants(correctVariants)
+                .withWeightsVector(invalidWeightsVector)
+                .withDecisionMatrix(correctDecisionMatrix)
+                .withCriteriaTypes(correctCriteriaTypes)
+                .build();
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void shouldThrowValidationExceptionForInvalidVariants(DecisionProblem decisionProblem) {
+        Validator spyValidator = spy(validator);
+
+        doReturn(false)
+                .when(spyValidator)
+                .isEachVariantsCorrect(decisionProblem.getVariants());
+        doReturn(true)
+                .when(spyValidator)
+                .isDecisionMatrixCorrect(decisionProblem.getDecisionMatrix());
+        doReturn(true)
+                .when(spyValidator)
+                .isCriteriaTypesCorrect(decisionProblem.getCriteriaTypes());
+        doReturn(true)
+                .when(spyValidator)
+                .isWeightsVectorCorrect(decisionProblem.getWeightsVector());
+
+
+        assertThatExceptionOfType(ValidationException.class)
+                .isThrownBy(() -> validator.validate(decisionProblem))
+                .withMessage("Validation error");
+
+    }
+
+    static List<DecisionProblem> shouldThrowValidationExceptionForInvalidVariants() {
+       return Arrays.asList(
+               createDecisionProblemWithInvalidVariants(null),
+               createDecisionProblemWithInvalidVariants(new String[]{}),
+               createDecisionProblemWithInvalidVariants(new String[]{"variant1", "variant2", null}),
+               createDecisionProblemWithInvalidVariants(new String[]{"variant1", "variant2", ""})
+        );
+    }
+
+    private static DecisionProblem createDecisionProblemWithInvalidVariants(String[] invalidVariants) {
+        double[][] correctDecisionMatrix = new double[][]{{1.2, 3.2, 43.0}, {3.2, 2.2, 30.1}};
+        double[] correctWeightsVector = new double[]{0.1, 0.3, 0.6};
+        List<CriterionType> correctCriteriaTypes = Arrays.asList(CriterionType.MAX, CriterionType.MIN, CriterionType.MAX);
+        return DecisionProblem.Builder.builder()
+                .withVariants(invalidVariants)
+                .withWeightsVector(correctWeightsVector)
+                .withDecisionMatrix(correctDecisionMatrix)
+                .withCriteriaTypes(correctCriteriaTypes)
+                .build();
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void shouldThrowValidationExceptionForInvalidDecisionMatrix(DecisionProblem decisionProblem) {
+        Validator spyValidator = spy(validator);
+
+        doReturn(false)
+                .when(spyValidator)
+                .isDecisionMatrixCorrect(decisionProblem.getDecisionMatrix());
+        doReturn(true)
+                .when(spyValidator)
+                .isEachVariantsCorrect(decisionProblem.getVariants());
+        doReturn(true)
+                .when(spyValidator)
+                .isCriteriaTypesCorrect(decisionProblem.getCriteriaTypes());
+        doReturn(true)
+                .when(spyValidator)
+                .isWeightsVectorCorrect(decisionProblem.getWeightsVector());
+
+
+        assertThatExceptionOfType(ValidationException.class)
+                .isThrownBy(() -> validator.validate(decisionProblem))
+                .withMessage("Validation error");
+
+    }
+
+    static List<DecisionProblem> shouldThrowValidationExceptionForInvalidDecisionMatrix() {
+        return Arrays.asList(
+                createDecisionProblemWithInvalidDecisionMatrix(null),
+                createDecisionProblemWithInvalidDecisionMatrix(new double[][]{}),
+                createDecisionProblemWithInvalidDecisionMatrix(new double[][] {{1.52, 1.0,}, null}),
+                createDecisionProblemWithInvalidDecisionMatrix(new double[][] {{1.52, 1.0,}, {}})
+
+        );
+    }
+
+    private static DecisionProblem createDecisionProblemWithInvalidDecisionMatrix(double[][] invalidDecisionMatrix) {
+        double[] correctWeightsVector = new double[]{0.1, 0.3, 0.6};
+        List<CriterionType> correctCriteriaTypes = Arrays.asList(CriterionType.MAX, CriterionType.MIN, CriterionType.MAX);
+        String[] correctVariants = {"variant1", "variant2", "variant3"};
+        return DecisionProblem.Builder.builder()
+                .withVariants(correctVariants)
+                .withWeightsVector(correctWeightsVector)
+                .withDecisionMatrix(invalidDecisionMatrix)
+                .withCriteriaTypes(correctCriteriaTypes)
+                .build();
+    }
+
+
+
+}
