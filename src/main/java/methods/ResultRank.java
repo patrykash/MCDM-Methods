@@ -21,6 +21,6 @@ public class ResultRank implements Comparable<ResultRank> {
 
     @Override
     public int compareTo(ResultRank o) {
-        return 0;
+        return Double.compare(this.rating, o.getRating());
     }
 }
