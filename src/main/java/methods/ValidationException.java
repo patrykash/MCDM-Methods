@@ -5,7 +5,7 @@ import java.util.List;
 public class ValidationException extends Exception {
     private List<String> errorsDescription;
 
-    ValidationException(String errorMessage, List<String> errorsDescription) {
+    public ValidationException(String errorMessage, List<String> errorsDescription) {
         super(errorMessage);
         this.errorsDescription = errorsDescription;
     }
