@@ -1,22 +1,26 @@
 package methods;
 
-public class ResultRank {
+public class ResultRank implements Comparable<ResultRank> {
     private String variantName;
 
-    private double result;
+    private double rating;
 
-    public ResultRank(String variantName, double result) {
+    public ResultRank(String variantName, double rating) {
         this.variantName = variantName;
-        this.result = result;
+        this.rating = rating;
     }
 
     public String getVariantName() {
         return variantName;
     }
 
-    public double getResult() {
-        return result;
+    public double getRating() {
+        return rating;
     }
 
 
+    @Override
+    public int compareTo(ResultRank o) {
+        return 0;
+    }
 }
