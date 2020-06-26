@@ -1,6 +1,8 @@
 package data;
 
 import methods.CriterionType;
+import methods.DecisionProblem;
+import methods.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +17,17 @@ public class Validator {
 
     public List<String> getErrorMessages() {
         return errorMessages;
+    }
+
+    public void validate(DecisionProblem decisionProblem) throws ValidationException {
+        boolean isValid = isEachVariantsCorrect(decisionProblem.getVariants());
+        isValid = isValid && isDecisionMatrixCorrect(decisionProblem.getDecisionMatrix());
+        isValid = isValid && isWeightsVectorCorrect(decisionProblem.getWeightsVector());
+        isValid = isValid && isCriteriaTypesCorrect(decisionProblem.getCriteriaTypes());
+        if (!isValid) {
+            throw new ValidationException("Validation error", errorMessages);
+        }
+
     }
 
     boolean isEachVariantsCorrect(String[] variants) {
@@ -195,6 +208,5 @@ public class Validator {
         }
         return false;
     }
-
 
 }
