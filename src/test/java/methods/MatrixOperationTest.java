@@ -118,6 +118,19 @@ class MatrixOperationTest {
         );
     }
 
+    @Test
+    void shouldCalculateEuclideanDistance() {
+        double[][] matrix = {{0.1097, 0.1536, 0.1755, 0.1536},
+                {0.2385, 0.1789, 0.2385, 0.1193}, {0.0973, 0.1947, 0.146, 0.146}};
+        double[] vector = {0.1097, 0.1193, 0.0973};
+        double[] expectedDistances = {0.1192, 0.1223, 0.1446, 0.0656};
+
+        double[] distances = MatrixOperation.calculateEuclideanDistances(matrix, vector);
+
+        assertThat(distances)
+                .containsExactly(expectedDistances, withPrecision(0.0001));
+    }
+
 
 
 

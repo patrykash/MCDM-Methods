@@ -52,6 +52,19 @@ class MatrixOperation {
         return nisVector;
     }
 
+    static double[] calculateEuclideanDistances(double[][] matrix, double[] vector) {
+        int numberOfCriteria = matrix.length;
+        int numberOfVariants = matrix[0].length;
+        double[] euclideanDistances = new double[numberOfVariants];
+        for (int i = 0; i < numberOfVariants; i++) {
+            for (int j = 0; j < numberOfCriteria; j++) {
+                euclideanDistances[i] =euclideanDistances[i] +  Math.pow(matrix[j][i] - vector[j],2);
+            }
+            euclideanDistances[i] = Math.sqrt(euclideanDistances[i]);
+        }
+        return euclideanDistances;
+    }
+
 
 
 }
