@@ -1,10 +1,15 @@
 package methods;
 
+import java.util.List;
+
 public class VectorNormalization implements MatrixNormalization {
     private DecisionProblem decisionProblem;
 
     private double[][] normalizedMatrix;
     private double[][] matrixToNormalize;
+    private double[] vectorsLength;
+    private int numberOfCriteria;
+    private int numberOfVariants;
 
 
     @Override
@@ -13,23 +18,30 @@ public class VectorNormalization implements MatrixNormalization {
     }
     @Override
     public double[][] normalizeMatrix() {
-        normalizedMatrix = new double[decisionProblem.getNumberOfCriteria()][decisionProblem.getNumberOfVariants()];
-        matrixToNormalize = decisionProblem.getDecisionMatrix();
-        double[] vectorsLength = calculateVectorsLength(decisionProblem.getDecisionMatrix());
-        for (int i = 0; i < decisionProblem.getNumberOfCriteria(); i++) {
-            if (decisionProblem.getCriteriaTypes().get(i)==CriterionType.MAX){
-                normalizeBenefitCriteria(i,vectorsLength);
+        setData();
+        List<CriterionType> criteriaTypes = decisionProblem.getCriteriaTypes();
+        for (int i = 0; i < numberOfCriteria; i++) {
+            if (criteriaTypes.get(i)==CriterionType.MAX){
+                normalizeBenefitCriteria(i);
             }else{
-                normalizeCostCriteria(i, vectorsLength);
+                normalizeCostCriteria(i);
             }
         }
         return normalizedMatrix;
     }
 
+    private void setData(){
+        numberOfCriteria = decisionProblem.getNumberOfCriteria();
+        numberOfVariants = decisionProblem.getNumberOfVariants();
+        normalizedMatrix = new double[numberOfCriteria][numberOfVariants];
+        matrixToNormalize = decisionProblem.getDecisionMatrix();
+        vectorsLength = calculateVectorsLength(decisionProblem.getDecisionMatrix());
+    }
+
     private double[] calculateVectorsLength(double[][] matrixToNormalize){
-        double[] vectorsLength = new double[decisionProblem.getNumberOfCriteria()];
-        for (int i = 0; i < decisionProblem.getNumberOfCriteria(); i++) {
-            for (int j = 0; j < decisionProblem.getNumberOfVariants(); j++) {
+        double[] vectorsLength = new double[numberOfCriteria];
+        for (int i = 0; i < numberOfCriteria; i++) {
+            for (int j = 0; j < numberOfVariants; j++) {
                 vectorsLength[i] = vectorsLength[i] + Math.pow(matrixToNormalize[i][j], 2);
             }
             vectorsLength[i] = Math.sqrt(vectorsLength[i]);
@@ -37,14 +49,14 @@ public class VectorNormalization implements MatrixNormalization {
         return vectorsLength;
     }
 
-    private void normalizeBenefitCriteria(int criterionNumber, double[] vectorsLength){
-        for (int j = 0; j < decisionProblem.getNumberOfVariants(); j++) {
+    private void normalizeBenefitCriteria(int criterionNumber){
+        for (int j = 0; j < numberOfVariants; j++) {
             normalizedMatrix[criterionNumber][j] = matrixToNormalize[criterionNumber][j] / vectorsLength[criterionNumber];
         }
     }
 
-    private void normalizeCostCriteria(int criterionNumber, double[] vectorsLength) {
-        for (int j = 0; j < decisionProblem.getNumberOfVariants(); j++) {
+    private void normalizeCostCriteria(int criterionNumber) {
+        for (int j = 0; j < numberOfVariants; j++) {
             normalizedMatrix[criterionNumber][j] = 1 - (matrixToNormalize[criterionNumber][j] / vectorsLength[criterionNumber]);
         }
     }
