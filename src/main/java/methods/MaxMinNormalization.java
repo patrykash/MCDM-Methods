@@ -15,7 +15,7 @@ public class MaxMinNormalization implements MatrixNormalization{
 
     private  int  numberOfCriteria;
 
-    void setDecisionProblem(DecisionProblem decisionProblem) {
+    public void setDecisionProblem(DecisionProblem decisionProblem) {
         this.decisionProblem = decisionProblem;
     }
 
