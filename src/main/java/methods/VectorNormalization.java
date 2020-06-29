@@ -5,6 +5,8 @@ import java.util.List;
 public class VectorNormalization implements MatrixNormalization {
     private DecisionProblem decisionProblem;
 
+
+
     @Override
     public void setDecisionProblem(DecisionProblem decisionProblem) {
         this.decisionProblem = decisionProblem;
@@ -12,15 +14,8 @@ public class VectorNormalization implements MatrixNormalization {
     @Override
     public double[][] normalizeMatrix() {
         double[][] normalizedMatrix = new double[decisionProblem.getNumberOfCriteria()][decisionProblem.getNumberOfVariants()];
-        double[] vectorsLength = new double[decisionProblem.getNumberOfCriteria()];
+        double[] vectorsLength = calculateVectorsLength();
         double[][] matrixToNormalize = decisionProblem.getDecisionMatrix();
-        for (int i = 0; i < decisionProblem.getNumberOfCriteria(); i++) {
-            for (int j = 0; j < decisionProblem.getNumberOfVariants(); j++) {
-                vectorsLength[i] = vectorsLength[i] + Math.pow(matrixToNormalize[i][j], 2);
-            }
-            vectorsLength[i] = Math.sqrt(vectorsLength[i]);
-        }
-        List<CriterionType> criterionTypes = decisionProblem.getCriteriaTypes();
         for (int i = 0; i < decisionProblem.getNumberOfCriteria(); i++) {
             for (int j = 0; j < decisionProblem.getNumberOfVariants(); j++) {
                 if (decisionProblem.getCriteriaTypes().get(i)==CriterionType.MAX){
@@ -32,6 +27,18 @@ public class VectorNormalization implements MatrixNormalization {
         }
 
         return normalizedMatrix;
+    }
+
+    private double[] calculateVectorsLength(){
+        double[][] matrixToNormalize = decisionProblem.getDecisionMatrix();
+        double[] vectorsLength = new double[decisionProblem.getNumberOfCriteria()];
+        for (int i = 0; i < decisionProblem.getNumberOfCriteria(); i++) {
+            for (int j = 0; j < decisionProblem.getNumberOfVariants(); j++) {
+                vectorsLength[i] = vectorsLength[i] + Math.pow(matrixToNormalize[i][j], 2);
+            }
+            vectorsLength[i] = Math.sqrt(vectorsLength[i]);
+        }
+        return vectorsLength;
     }
 
 
