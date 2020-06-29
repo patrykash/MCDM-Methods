@@ -17,7 +17,8 @@ class MaxMinNormalizationTest {
     @ParameterizedTest
     @MethodSource
     void shouldNormalizeMatrix(DecisionProblem decisionProblem, double[][] correctNormalizedMatrix) {
-        MaxMinNormalization normalization = new MaxMinNormalization(decisionProblem);
+        MaxMinNormalization normalization = new MaxMinNormalization();
+        normalization.setDecisionProblem(decisionProblem);
 
 
         double[][] normalizedMatrix = normalization.normalizeMatrix();

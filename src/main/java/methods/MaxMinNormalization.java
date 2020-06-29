@@ -11,18 +11,17 @@ public class MaxMinNormalization implements MatrixNormalization{
 
     private double[][] normalizedMatrix;
 
-    public MaxMinNormalization(DecisionProblem decisionProblem) {
-        this.decisionProblem = decisionProblem;
-        this.normalizedMatrix =
-                new double[decisionProblem.getNumberOfCriteria()][decisionProblem.getNumberOfVariants()];
+    private int numberOfVariants;
 
+    private  int  numberOfCriteria;
+
+    void setDecisionProblem(DecisionProblem decisionProblem) {
+        this.decisionProblem = decisionProblem;
     }
 
     @Override
     public double[][] normalizeMatrix() {
-        int numberOfCriteria = decisionProblem.getNumberOfCriteria();
-        maxValuesForEachCriteria = decisionProblem.findMaxValueForEachCriterion();
-        minValuesForEachCriteria = decisionProblem.findMinValueForEachCriterion();
+        setData();
         for (int i = 0; i < numberOfCriteria; i++) {
             if (decisionProblem.getCriteriaTypes().get(i) == CriterionType.MAX) {
                    normalizeBenefitCriteria(i);
@@ -33,10 +32,18 @@ public class MaxMinNormalization implements MatrixNormalization{
         return normalizedMatrix;
     }
 
+    private void setData() {
+        numberOfVariants = decisionProblem.getNumberOfVariants();
+        numberOfCriteria = decisionProblem.getNumberOfCriteria();
+        normalizedMatrix = new double[numberOfCriteria][numberOfVariants];
+        maxValuesForEachCriteria = decisionProblem.findMaxValueForEachCriterion();
+        minValuesForEachCriteria = decisionProblem.findMinValueForEachCriterion();
+    }
+
 
     private void normalizeBenefitCriteria(int criteriaNumber) {
         double[][] matrixToNormalized = decisionProblem.getDecisionMatrix();
-        for (int i = 0; i < decisionProblem.getNumberOfVariants(); i++) {
+        for (int i = 0; i < numberOfVariants; i++) {
                 normalizedMatrix[criteriaNumber][i] =
                         (matrixToNormalized[criteriaNumber][i] - minValuesForEachCriteria[criteriaNumber]) /
                 (maxValuesForEachCriteria[criteriaNumber] - minValuesForEachCriteria[criteriaNumber]);
@@ -44,7 +51,6 @@ public class MaxMinNormalization implements MatrixNormalization{
     }
 
     private void normalizeCostCriteria(int criteriaNumber) {
-        int numberOfVariants = decisionProblem.getNumberOfVariants();
         double[][] matrixToNormalized = decisionProblem.getDecisionMatrix();
         for (int i = 0; i < numberOfVariants; i++) {
             normalizedMatrix[criteriaNumber][i] =
