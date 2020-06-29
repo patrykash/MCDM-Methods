@@ -16,6 +16,16 @@ class MatrixOperation {
         return result;
     }
 
+    static double[][] calculateWeightedMatrix(double[][] matrix, double[] weightsVector) {
+        double[][] weightedMatrix = new double[matrix.length][matrix[0].length];
+        for (int i = 0; i < weightsVector.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                weightedMatrix[i][j] = matrix[i][j] * weightsVector[i];
+            }
+        }
+        return weightedMatrix;
+    }
+
 
 
 }
