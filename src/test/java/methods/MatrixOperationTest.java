@@ -7,10 +7,10 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.withPrecision;
+import static org.assertj.core.api.Assertions.*;
 
 class MatrixOperationTest {
 
@@ -58,6 +58,63 @@ class MatrixOperationTest {
                         new double[]{0.7, 0.2, 0.1},
                         new double[][]{{0.7, 35, 70, 140},{0.05, 0.1, 0.15, 0.3}, {0.099, 0.001, 0, 0.1}}
                 )
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void shouldFindMaxValuesForCriteriaInDecisionMatrix(double[][] matrix, double[] expectedPisVector) {
+        double[] pisVector= MatrixOperation.findPisVector(matrix);
+
+        assertThat(pisVector)
+                .containsExactly(expectedPisVector);
+    }
+
+    static Stream<Arguments> shouldFindMaxValuesForCriteriaInDecisionMatrix() {
+        return Stream.of(
+                Arguments.of(new double[][]{{0.1, 0.01, 0.001}, {1, 10, 100}, {1, 1, 1}},
+                        new double[]{0.1, 100, 1}),
+                Arguments.of(new double[][]{{-0.1, -0.01, -0.001}, {10, 10, 10}, {0.11, 0.10, 0.12}},
+                        new double[]{-0.001, 10, 0.12}),
+                Arguments.of(new double[][]{{11, 11}, {23.1, 23.1}},
+                        new double[]{11, 23.1}),
+                Arguments.of(new double[][]{{Double.MAX_VALUE, 55, Double.MIN_VALUE},
+                                {Double.MIN_VALUE, Double.MAX_VALUE, 0.002}},
+                        new double[]{Double.MAX_VALUE, Double.MAX_VALUE})
+
+        );
+    }
+
+    @Test
+    void shouldThrowNoSuchElementExceptionForInvalidDecisionMatrix() {
+        DecisionProblem decisionProblem = DecisionProblem.Builder.builder()
+                .withDecisionMatrix(new double[2][0])
+                .build();
+
+        assertThatExceptionOfType(NoSuchElementException.class)
+                .isThrownBy(decisionProblem::findMaxValueForEachCriterion);
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void shouldFindMinValuesForCriteriaInDecisionMatrix(double[][] matrix, double[] expectedNisVector) {
+        double[] nisVector = MatrixOperation.findNisVector(matrix);
+
+        assertThat(nisVector)
+                .containsExactly(expectedNisVector);
+    }
+
+    static Stream<Arguments> shouldFindMinValuesForCriteriaInDecisionMatrix() {
+        return Stream.of(
+                Arguments.of(new double[][] {{0.1, 0.01, 0.001}, {1, 10, 100}, {1, 1, 1}},
+                        new double[] {0.001, 1, 1}),
+                Arguments.of(new double[][] {{-0.1, -0.01, -0.001}, {10, 10, 10}, {0.11, 0.10, 0.12}},
+                        new double[] {-0.1, 10, 0.1}),
+                Arguments.of(new double[][]{{11, 11}, {23.1, 23.1}},
+                        new double[]{11, 23.1}),
+                Arguments.of(new double[][]{{Double.MAX_VALUE, 55, Double.MIN_VALUE},
+                                {Double.MIN_VALUE, Double.MAX_VALUE, 0.002}},
+                        new double[]{Double.MIN_VALUE, Double.MIN_VALUE})
         );
     }
 
