@@ -46,26 +46,19 @@ public class DecisionProblem {
     }
 
      double[] findMaxValueForEachCriterion() {
-        int numberOfCriteria = getNumberOfCriteria();
+        /*int numberOfCriteria = getNumberOfCriteria();
         double[] maxValues = new double[numberOfCriteria];
         for (int i = 0; i < numberOfCriteria; i++) {
             maxValues[i] = Arrays.stream(this.decisionMatrix[i])
                     .max()
                     .orElseThrow(()->
                             new NoSuchElementException("messagae"));
-        }
-        return maxValues;
+        }*/
+        return MatrixOperation.findPisVector(decisionMatrix);
     }
 
     double[] findMinValueForEachCriterion() {
-        int numberOfCriteria = getNumberOfCriteria();
-        double[] minValues = new double[numberOfCriteria];
-        for (int i = 0; i < numberOfCriteria; i++) {
-            minValues[i] = Arrays.stream(decisionMatrix[i])
-                    .min()
-                    .orElseThrow(NoSuchElementException::new);
-        }
-        return minValues;
+        return MatrixOperation.findNisVector(decisionMatrix);
     }
 
     public static final class Builder {

@@ -1,6 +1,8 @@
 package methods;
 
 
+import java.util.Arrays;
+import java.util.NoSuchElementException;
 
 class MatrixOperation {
 
@@ -24,6 +26,30 @@ class MatrixOperation {
             }
         }
         return weightedMatrix;
+    }
+
+    //NIS - negative ideal solution, min value for each criterion
+    static double[] findNisVector(double[][] matrix) {
+        int numberOfCriteria = matrix.length;
+        double[] nisVector = new double[numberOfCriteria];
+        for (int i = 0; i < numberOfCriteria; i++) {
+            nisVector[i] = Arrays.stream(matrix[i])
+                    .min()
+                    .orElseThrow(NoSuchElementException::new);
+        }
+        return nisVector;
+    }
+
+    //PIS - positive ideal solution, max value for each criterion
+    static double[] findPisVector(double[][] matrix) {
+        int numberOfCriteria = matrix.length;
+        double[] nisVector = new double[numberOfCriteria];
+        for (int i = 0; i < numberOfCriteria; i++) {
+            nisVector[i] = Arrays.stream(matrix[i])
+                    .max()
+                    .orElseThrow(NoSuchElementException::new);
+        }
+        return nisVector;
     }
 
 
