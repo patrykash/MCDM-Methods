@@ -46,14 +46,6 @@ public class DecisionProblem {
     }
 
      double[] findMaxValueForEachCriterion() {
-        /*int numberOfCriteria = getNumberOfCriteria();
-        double[] maxValues = new double[numberOfCriteria];
-        for (int i = 0; i < numberOfCriteria; i++) {
-            maxValues[i] = Arrays.stream(this.decisionMatrix[i])
-                    .max()
-                    .orElseThrow(()->
-                            new NoSuchElementException("messagae"));
-        }*/
         return MatrixOperation.findPisVector(decisionMatrix);
     }
 
