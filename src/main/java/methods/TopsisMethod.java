@@ -7,17 +7,19 @@ import java.util.List;
 public class TopsisMethod implements McdmMethod {
     private DecisionProblem decisionProblem;
 
-    public TopsisMethod(DecisionProblem decisionProblem) {
+    private MatrixNormalization matrixNormalization;
+
+    private TopsisMethod(DecisionProblem decisionProblem, MatrixNormalization normalization) {
         this.decisionProblem = decisionProblem;
+        this.matrixNormalization = normalization;
     }
 
     @Override
     public List<ResultRank> calculateResult() throws ValidationException {
         Validator validator = new Validator();
         validator.validate(decisionProblem);
-        VectorNormalization vectorNormalization = new VectorNormalization();
-        vectorNormalization.setDecisionProblem(decisionProblem);
-        double[][] normalizedMatrix = vectorNormalization.normalizeMatrix();
+        matrixNormalization.setDecisionProblem(decisionProblem);
+        double[][] normalizedMatrix = matrixNormalization.normalizeMatrix();
         double[][] weightedNormalizedMatrix = MatrixOperation.calculateWeightedMatrix(normalizedMatrix,
                 decisionProblem.getWeightsVector());
 
@@ -32,6 +34,17 @@ public class TopsisMethod implements McdmMethod {
         double[] ratings = topsisRating.calculateRatings();
         return Util.assignRatingsToVariants(ratings, decisionProblem.getVariants());
     }
+
+    public static TopsisMethod createWithMaxMinNormalization(DecisionProblem decisionProblem) {
+        return  new TopsisMethod(decisionProblem, new MaxMinNormalization());
+    }
+
+    public static TopsisMethod createWithVetorNormalization(DecisionProblem decisionProblem) {
+        return  new TopsisMethod(decisionProblem, new VectorNormalization());
+    }
+
+
+
 
 
 }
