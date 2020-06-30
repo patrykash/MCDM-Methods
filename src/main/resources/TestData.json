@@ -1,0 +1,10 @@
+{
+  "variants": ["Trasa1", "Trasa2", "Trasa3", "Trasa4"],
+  "decisionMatrix": [
+    [0.34, 0.316, 0.608, 0.3],
+    [8, 7.7, 7.8, 7.9],
+    [4, 5, 6, 3]
+  ],
+  "weightsVector": [0.6, 0.1, 0.3],
+  "criteriaTypes": ["MAX", "MIN", "MIN"]
+}

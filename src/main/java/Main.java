@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args) throws ValidationException {
         String methodType = args[0];
         DecisionProblemSource decisionProblemSource = new JsonFileSource();
-        DecisionProblem decisionProblem = decisionProblemSource.loadDecisionProblem("src\\main\\resources\\dataTes.json");
+        DecisionProblem decisionProblem = decisionProblemSource.loadDecisionProblem("src\\main\\resources\\TestData.json");
         McdmMethod mcdmMethod = null;
         switch (methodType) {
             case "1":
